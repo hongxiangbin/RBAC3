@@ -167,11 +167,11 @@ public class BaseMybatisDao<T> extends SqlSessionDaoSupport {
 		page.setPageSize(pageSize);
 		Configuration c = this.getSqlSession().getConfiguration();
 		int offset = (page.getPageNo() - 1) * page.getPageSize();
-		String page_sql = String.format(" limit  %s , %s ", offset,pageSize);
+		//String page_sql = String.format(" limit  %s , %s ", offset,pageSize);
+		String page_sql = null;
 		params.put("page_sql", page_sql);
-
 		sqlId =  String.format("%s.%s", NAMESPACE,sqlId) ;
-
+		System.err.println(sqlId+"7777777777777777");
 		BoundSql boundSql = c.getMappedStatement(sqlId).getBoundSql(params);
 		String sqlcode = boundSql.getSql();
 		LoggerUtils.fmtDebug(SELF, "findPage sql : %s",sqlcode );

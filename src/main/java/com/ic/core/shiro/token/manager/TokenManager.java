@@ -6,7 +6,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 
-import com.ic.common.model.UUser;
+import com.ic.common.model.SysUser;
 import com.ic.common.utils.SpringContextUtil;
 import com.ic.core.shiro.session.CustomSessionManager;
 import com.ic.core.shiro.token.SampleRealm;
@@ -26,8 +26,8 @@ public class TokenManager {
 	 * 获取当前登录的用户User对象
 	 * @return
 	 */
-	public static UUser getToken(){
-		UUser token = (UUser)SecurityUtils.getSubject().getPrincipal();
+	public static SysUser getToken(){
+		SysUser token = (SysUser)SecurityUtils.getSubject().getPrincipal();
 		return token ;
 	}
 	
@@ -87,8 +87,8 @@ public class TokenManager {
 	 * @param rememberMe
 	 * @return
 	 */
-	public static UUser login(UUser user,Boolean rememberMe){
-		ShiroToken token = new ShiroToken(user.getEmail(), user.getPswd());
+	public static SysUser login(SysUser user, Boolean rememberMe){
+		ShiroToken token = new ShiroToken(user.getEmail(), user.getPassword());
 		token.setRememberMe(rememberMe);
 		SecurityUtils.getSubject().login(token);
 		return getToken();
@@ -140,7 +140,6 @@ public class TokenManager {
 	
 	/**
 	 * 根据UserIds 	清空权限信息。
-	 * @param id	用户ID
 	 */
 	public static void clearUserAuthByUserId(Long...userIds){
 		

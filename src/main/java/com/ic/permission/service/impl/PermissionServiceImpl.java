@@ -8,12 +8,12 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ic.common.dao.UPermissionMapper;
-import com.ic.common.dao.URolePermissionMapper;
-import com.ic.common.dao.UUserMapper;
-import com.ic.common.dao.UUserRoleMapper;
-import com.ic.common.model.UPermission;
-import com.ic.common.model.URolePermission;
+import com.ic.common.dao.SysResourceMapper;
+import com.ic.common.dao.SysRoleResourceMapper;
+import com.ic.common.dao.SysUserMapper;
+import com.ic.common.dao.SysUserRoleMapper;
+import com.ic.common.model.SysResource;
+import com.ic.common.model.SysRoleResourceKey;
 import com.ic.common.utils.LoggerUtils;
 import com.ic.common.utils.StringUtils;
 import com.ic.core.mybatis.BaseMybatisDao;
@@ -22,16 +22,16 @@ import com.ic.core.shiro.token.manager.TokenManager;
 import com.ic.permission.bo.UPermissionBo;
 import com.ic.permission.service.PermissionService;
 @Service
-public class PermissionServiceImpl extends BaseMybatisDao<UPermissionMapper> implements PermissionService {
+public class PermissionServiceImpl extends BaseMybatisDao<SysResourceMapper> implements PermissionService {
 
 	@Autowired
-	UPermissionMapper permissionMapper;
+	SysResourceMapper permissionMapper;
 	@Autowired
-	UUserMapper userMapper;
+	SysUserMapper userMapper;
 	@Autowired
-	URolePermissionMapper rolePermissionMapper;
+	SysRoleResourceMapper rolePermissionMapper;
 	@Autowired
-	UUserRoleMapper userRoleMapper;
+	SysUserRoleMapper userRoleMapper;
 	
 	@Override
 	public int deleteByPrimaryKey(Long id) {
@@ -39,13 +39,13 @@ public class PermissionServiceImpl extends BaseMybatisDao<UPermissionMapper> imp
 	}
 
 	@Override
-	public UPermission insert(UPermission record) {
+	public SysResource insert(SysResource record) {
 		permissionMapper.insert(record);
 		return record;
 	}
 
 	@Override
-	public UPermission insertSelective(UPermission record) {
+	public SysResource insertSelective(SysResource record) {
 		//添加权限
 		permissionMapper.insertSelective(record);
 		//每添加一个权限，都往【系统管理员 	888888】里添加一次。保证系统管理员有最大的权限
@@ -54,17 +54,17 @@ public class PermissionServiceImpl extends BaseMybatisDao<UPermissionMapper> imp
 	}
 
 	@Override
-	public UPermission selectByPrimaryKey(Long id) {
+	public SysResource selectByPrimaryKey(Long id) {
 		return permissionMapper.selectByPrimaryKey(id);
 	}
 
 	@Override
-	public int updateByPrimaryKey(UPermission record) {
+	public int updateByPrimaryKey(SysResource record) {
 		return permissionMapper.updateByPrimaryKey(record);
 	}
 
 	@Override
-	public int updateByPrimaryKeySelective(UPermission record) {
+	public int updateByPrimaryKeySelective(SysResource record) {
 		return permissionMapper.updateByPrimaryKeySelective(record);
 	}
 
@@ -84,7 +84,7 @@ public class PermissionServiceImpl extends BaseMybatisDao<UPermissionMapper> imp
 			c:for (String idx : idArray) {
 				Long id = new Long(idx);
 				
-				List<URolePermission> rolePermissions= rolePermissionMapper.findRolePermissionByPid(id);
+				List<SysRoleResourceKey> rolePermissions= rolePermissionMapper.findRolePermissionByPid(id);
 				if(null != rolePermissions && rolePermissions.size() > 0){
 					errorCount+=rolePermissions.size();
 					continue c;
@@ -110,7 +110,7 @@ public class PermissionServiceImpl extends BaseMybatisDao<UPermissionMapper> imp
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Pagination<UPermission> findPage(Map<String,Object> resultMap, Integer pageNo,
+	public Pagination<SysResource> findPage(Map<String,Object> resultMap, Integer pageNo,
 			Integer pageSize) {
 		return super.findPage(resultMap, pageNo, pageSize);
 	}
@@ -150,7 +150,7 @@ public class PermissionServiceImpl extends BaseMybatisDao<UPermissionMapper> imp
 				for (String pid : idArray) {
 					//这里严谨点可以判断，也可以不判断。这个{@link StringUtils 我是重写了的} 
 					if(StringUtils.isNotBlank(pid)){
-						URolePermission entity = new URolePermission(roleId,new Long(pid));
+						SysRoleResourceKey entity = new SysRoleResourceKey(roleId,new Long(pid));
 						count += rolePermissionMapper.insertSelective(entity);
 					}
 				}

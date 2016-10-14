@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ic.common.dao.SysRoleMapper">
+    <resultMap id="BaseResultMap" type="com.ic.common.model.SysRole">
+        <id column="ID" property="id" jdbcType="DECIMAL"/>
+        <result column="NAME" property="name" jdbcType="VARCHAR"/>
+        <result column="SEQ" property="seq" jdbcType="DECIMAL"/>
+        <result column="DESCRIPTION" property="description" jdbcType="VARCHAR"/>
+        <result column="ISDEFAULT" property="isdefault" jdbcType="DECIMAL"/>
+        <result column="TYPE" property="type" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    ID, NAME, SEQ, DESCRIPTION, ISDEFAULT, TYPE
+  </sql>
+    <sql id="limit_sql">
+        <if test="page_sql != null and page_sql != ''">
+            ${page_sql}
+        </if>
+    </sql>
+
+    <sql id="where_all">
+        <where>
+            <if test="findContent != null and findContent !='' ">
+                and (
+                LOWER(NAME) like CONCAT("%",#{findContent,jdbcType=VARCHAR},"%") or
+                LOWER(TYPE) like CONCAT("%",#{findContent,jdbcType=VARCHAR},"%")
+                )
+            </if>
+        </where>
+    </sql>
+
+    <!-- ====================================		初始化数据（调用存储过程）	========================================= -->
+    <insert id="initData">
+    {call init_shiro_demo()}
+  </insert>
+    <!-- ====================================		初始化数据（调用存储过程）	========================================= -->
+
+    <select id="findRoleByUserId" resultType="java.lang.String">
+    select R.TYPE from SYS_ROLE R,SYS_USER_ROLE UR where UR.R_ID = R.ID and UR.U_ID = #{id,jdbcType=BIGINT}
+  </select>
+
+
+    <!-- 普通的分页查询 -->
+    <select id="findAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from SYS_ROLE
+        <include refid="where_all"/>
+        <include refid="limit_sql"/>
+    </select>
+    <select id="findCount" resultMap="BaseResultMap">
+        select count(ID) from SYS_ROLE
+        <include refid="where_all"/>
+    </select>
+
+    <!-- 选择角色给用户 ，checkbox 列表-->
+    <select id="selectRoleByUserId" resultType="com.ic.permission.bo.URoleBo">
+    select UR.ID,UR.NAME,UR.TYPE,ifnull(UU.ID,0)marker from SYS_ROLE UR
+    left join SYS_USER_ROLE UUR on UUR.U_ID = UR.ID
+    left join (select ID from SYS_USER where ID =#{id,jdbcType=BIGINT}) UU on UU.ID = UUR.U_ID
+    group by UR.ID
+  </select>
+
+    <!-- 权限分配的分页查询 -->
+    <select id="findRoleAndPermission" resultType="com.ic.permission.bo.RolePermissionAllocationBo">
+        select UR.ID,UR.TYPE,UR.NAME,wm_concat(UP.NAME) permissionNames,wm_concat(UP.ID)permissionIds from
+        SYS_ROLE UR
+        left join SYS_ROLE_RESOURCE URP on URP.ROLE_ID = UR.ID
+        left join SYS_RESOURCE UP on UP.ID = URP.RES_ID
+        <where>
+            <if test="findContent != null and findContent !='' ">
+                and (
+                LOWER(UR.NAME) like CONCAT("%",#{findContent,jdbcType=VARCHAR},"%") or
+                LOWER(UR.TYPE) like CONCAT("%",#{findContent,jdbcType=VARCHAR},"%")
+                )
+            </if>
+        </where>
+        group by UR.ID,UR.TYPE,UR.NAME
+        <include refid="limit_sql"/>
+    </select>
+
+    <!-- Mybatis 一对多 Demo  begin -->
+
+    <!-- 查询用户全部的role & permission -->
+    <resultMap id="findNowAllPermission_resultMap" extends="BaseResultMap" type="com.ic.common.model.SysRole">
+        <collection property="resources" javaType="com.ic.common.model.SysResource">
+            <id column="PID" property="id" jdbcType="BIGINT"/>
+            <result column="PNAME" property="name" jdbcType="VARCHAR"/>
+            <result column="URL" property="url" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+    <!-- 根据用户ID，查询所有权限 -->
+    <select id="findNowAllPermission" resultMap="findNowAllPermission_resultMap">
+    select UR.ID,UR.NAME,UR.TYPE ,UP.ID PID,UP.URL,UP.NAME PNAME
+    from (select R_ID from SYS_USER_ROLE where U_ID = #{userId,jdbcType=BIGINT}) UUR
+    left join SYS_ROLE UR on UUR.R_ID = UR.ID
+    left join SYS_ROLE_RESOURCE URP on URP.ROLE_ID = UR.ID
+    left join SYS_RESOURCE UP on UP.ID = URP.RES_ID
+  </select>
+    <!-- Mybatis 一对多 Demo  end -->
+
+    <!--一下为自动生成-->
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from SYS_ROLE
+        where ID = #{id,jdbcType=DECIMAL}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from SYS_ROLE
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+    <insert id="insert" parameterType="com.ic.common.model.SysRole">
+    insert into SYS_ROLE (ID, NAME, SEQ, 
+      DESCRIPTION, ISDEFAULT, TYPE
+      )
+    values (#{id,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR}, #{seq,jdbcType=DECIMAL}, 
+      #{description,jdbcType=VARCHAR}, #{isdefault,jdbcType=DECIMAL}, #{type,jdbcType=VARCHAR}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.ic.common.model.SysRole">
+
+        <selectKey keyProperty="id" resultType="Long" order="BEFORE">
+          SELECT IC_SEQ_ID.nextval FROM dual
+        </selectKey>
+        insert into SYS_ROLE
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="name != null">
+                NAME,
+            </if>
+            <if test="seq != null">
+                SEQ,
+            </if>
+            <if test="description != null">
+                DESCRIPTION,
+            </if>
+            <if test="isdefault != null">
+                ISDEFAULT,
+            </if>
+            <if test="type != null">
+                TYPE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=DECIMAL},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="seq != null">
+                #{seq,jdbcType=DECIMAL},
+            </if>
+            <if test="description != null">
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="isdefault != null">
+                #{isdefault,jdbcType=DECIMAL},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ic.common.model.SysRole">
+        update SYS_ROLE
+        <set>
+            <if test="name != null">
+                NAME = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="seq != null">
+                SEQ = #{seq,jdbcType=DECIMAL},
+            </if>
+            <if test="description != null">
+                DESCRIPTION = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="isdefault != null">
+                ISDEFAULT = #{isdefault,jdbcType=DECIMAL},
+            </if>
+            <if test="type != null">
+                TYPE = #{type,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=DECIMAL}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ic.common.model.SysRole">
+    update SYS_ROLE
+    set NAME = #{name,jdbcType=VARCHAR},
+      SEQ = #{seq,jdbcType=DECIMAL},
+      DESCRIPTION = #{description,jdbcType=VARCHAR},
+      ISDEFAULT = #{isdefault,jdbcType=DECIMAL},
+      TYPE = #{type,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>

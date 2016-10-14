@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ic.common.controller.BaseController;
-import com.ic.common.model.UUser;
+import com.ic.common.model.SysUser;
 import com.ic.common.utils.LoggerUtils;
 import com.ic.core.shiro.token.manager.TokenManager;
 import com.ic.user.manager.UserManager;
-import com.ic.user.service.UUserService;
+import com.ic.user.service.SysUserService;
 
 /**
  * 
@@ -32,7 +32,7 @@ import com.ic.user.service.UUserService;
 public class UserCoreController extends BaseController {
 
 	@Resource
-	UUserService userService;
+	SysUserService userService;
 	/**
 	 * 个人资料
 	 * @return
@@ -63,7 +63,7 @@ public class UserCoreController extends BaseController {
 		//根据当前登录的用户帐号 + 老密码，查询。
 		String email = TokenManager.getToken().getEmail();
 				pswd = UserManager.md5Pswd(email, pswd);
-		UUser	user = userService.login(email, pswd);
+		SysUser user = userService.login(email, pswd);
 		
 		if("admin".equals(email)){
 			resultMap.put("status", 300);
@@ -75,7 +75,7 @@ public class UserCoreController extends BaseController {
 			resultMap.put("status", 300);
 			resultMap.put("message", "密码不正确！");
 		}else{
-			user.setPswd(newPswd);
+			user.setPassword(newPswd);
 			//加工密码
 			user = UserManager.md5Pswd(user);
 			//修改密码
@@ -93,7 +93,7 @@ public class UserCoreController extends BaseController {
 	 */
 	@RequestMapping(value="updateSelf",method=RequestMethod.POST)
 	@ResponseBody
-	public Map<String,Object> updateSelf(UUser entity){
+	public Map<String,Object> updateSelf(SysUser entity){
 		try {
 			userService.updateByPrimaryKeySelective(entity);
 			resultMap.put("status", 200);

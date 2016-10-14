@@ -28,7 +28,7 @@
           <element id="library" level="project" name="Maven: org.springframework:spring-jdbc:4.2.5.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework:spring-tx:4.2.5.RELEASE" />
           <element id="library" level="project" name="Maven: org.mybatis:mybatis-spring:1.1.1" />
-          <element id="library" level="project" name="Maven: mysql:mysql-connector-java:5.1.21" />
+          <element id="library" level="project" name="Maven: com.oracle:ojdbc6:11.2.0.4.0" />
           <element id="library" level="project" name="Maven: com.alibaba:druid:1.0.18" />
           <element id="library" level="project" name="Maven: org.aspectj:aspectjweaver:1.7.1" />
           <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.9.11" />

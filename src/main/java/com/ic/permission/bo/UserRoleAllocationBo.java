@@ -2,13 +2,13 @@ package com.ic.permission.bo;
 
 import java.io.Serializable;
 
-import com.ic.common.model.UUser;
+import com.ic.common.model.SysUser;
 /**
  * 用户角色分配 查询列表BO
  * @author zhou-baicheng
  *
  */
-public class UserRoleAllocationBo extends UUser implements Serializable {
+public class UserRoleAllocationBo extends SysUser implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	//Role Name列转行，以,分割

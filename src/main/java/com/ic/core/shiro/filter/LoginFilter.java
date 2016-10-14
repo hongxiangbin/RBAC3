@@ -8,14 +8,13 @@ import javax.servlet.ServletResponse;
 
 import org.apache.shiro.web.filter.AccessControlFilter;
 
-import com.ic.common.model.UUser;
+import com.ic.common.model.SysUser;
 import com.ic.common.utils.LoggerUtils;
 import com.ic.core.shiro.token.manager.TokenManager;
 /**
  *
  * 判断登录
  *
- * 
  */
 public class LoginFilter  extends AccessControlFilter {
 	final static Class<LoginFilter> CLASS = LoginFilter.class;
@@ -23,7 +22,7 @@ public class LoginFilter  extends AccessControlFilter {
 	protected boolean isAccessAllowed(ServletRequest request,
 			ServletResponse response, Object mappedValue) throws Exception {
 		
-		UUser token = TokenManager.getToken();
+		SysUser token = TokenManager.getToken();
 		
 		if(null != token || isLoginRequest(request, response)){// && isEnabled()
             return Boolean.TRUE;

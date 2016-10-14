@@ -13,7 +13,7 @@ import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.support.DefaultSubjectContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.ic.common.model.UUser;
+import com.ic.common.model.SysUser;
 import com.ic.common.utils.LoggerUtils;
 import com.ic.common.utils.StringUtils;
 import com.ic.core.shiro.CustomShiroSessionDAO;
@@ -74,8 +74,8 @@ public class CustomSessionManager {
 				SimplePrincipalCollection spc = (SimplePrincipalCollection)obj;
 				//判断用户，匹配用户ID。
 				obj = spc.getPrimaryPrincipal();
-				if(null != obj && obj instanceof UUser){
-					UUser user = (UUser)obj;
+				if(null != obj && obj instanceof SysUser){
+					SysUser user = (SysUser)obj;
 					//比较用户ID，符合即加入集合
 					if(null != user && idset.contains(user.getId())){
 						list.add(spc);
@@ -112,9 +112,9 @@ public class CustomSessionManager {
 			 * return new SimpleAuthenticationInfo(user,user.getPswd(), getName());的user 对象。
 			 */
 			obj = spc.getPrimaryPrincipal();
-			if(null != obj && obj instanceof UUser){
+			if(null != obj && obj instanceof SysUser){
 				//存储session + user 综合信息
-				UserOnlineBo userBo = new UserOnlineBo((UUser)obj);
+				UserOnlineBo userBo = new UserOnlineBo((SysUser)obj);
 				//最后一次和系统交互的时间
 				userBo.setLastAccess(session.getLastAccessTime());
 				//主机的ip地址
@@ -142,7 +142,7 @@ public class CustomSessionManager {
 	/**
 	 * 改变Session状态
 	 * @param status {true:踢出,false:激活}
-	 * @param sessionId
+	 * @param sessionIds
 	 * @return
 	 */
 	public Map<String, Object> changeSessionStatus(Boolean status,
@@ -178,7 +178,7 @@ public class CustomSessionManager {
 	 * @param id		用户ID
 	 * @param status	用户状态
 	 */
-	public void forbidUserById(Long id, Long status) {
+	public void forbidUserById(Long id, Short status) {
 		//获取所有在线用户
 		for(UserOnlineBo bo : getAllUser()){
 			Long userId = bo.getId();

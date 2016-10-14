@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ic.common.controller.BaseController;
-import com.ic.common.model.UUser;
+import com.ic.common.model.SysUser;
 import com.ic.core.mybatis.page.Pagination;
 import com.ic.core.shiro.session.CustomSessionManager;
 import com.ic.user.bo.UserOnlineBo;
-import com.ic.user.service.UUserService;
+import com.ic.user.service.SysUserService;
 /**
  *
  * 用户会员管理
@@ -34,7 +34,7 @@ public class MemberController extends BaseController {
 	@Autowired
 	CustomSessionManager customSessionManager;
 	@Autowired
-	UUserService userService;
+	SysUserService userService;
 	/**
 	 * 用户列表管理
 	 * @return
@@ -43,7 +43,7 @@ public class MemberController extends BaseController {
 	public ModelAndView list(ModelMap map,Integer pageNo,String findContent){
 		
 		map.put("findContent", findContent);
-		Pagination<UUser> page = userService.findByPage(map,pageNo,pageSize);
+		Pagination<SysUser> page = userService.findByPage(map,pageNo,pageSize);
 		map.put("page", page);
 		return new ModelAndView("member/list");
 	}
@@ -68,7 +68,7 @@ public class MemberController extends BaseController {
 	/**
 	 * 改变Session状态
 	 * @param status
-	 * @param sessionId
+	 * @param sessionIds
 	 * @return
 	 */
 	@RequestMapping(value="changeSessionStatus",method=RequestMethod.POST)
@@ -94,7 +94,7 @@ public class MemberController extends BaseController {
 	 */
 	@RequestMapping(value="forbidUserById",method=RequestMethod.POST)
 	@ResponseBody
-	public Map<String,Object> forbidUserById(Long id,Long status){
+	public Map<String,Object> forbidUserById(Long id,Short status){
 		return userService.updateForbidUserById(id,status);
 	}
 	

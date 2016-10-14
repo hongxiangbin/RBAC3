@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ic.common.dao.SysUserMapper" >
+  <resultMap id="BaseResultMap" type="com.ic.common.model.SysUser" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="NICKNAME" property="nickname" jdbcType="VARCHAR" />
+    <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+    <result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="LAST_LOGIN_TIME" property="lastLoginTime" jdbcType="TIMESTAMP" />
+    <result column="STATUS" property="status" jdbcType="DECIMAL" />
+    <result column="AGE" property="age" jdbcType="DECIMAL" />
+    <result column="GENDER" property="gender" jdbcType="DECIMAL" />
+    <result column="ISDEFAULT" property="isdefault" jdbcType="DECIMAL" />
+    <result column="ORGANIZATION_ID" property="organizationId" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, NICKNAME, EMAIL, PASSWORD, CREATE_TIME, LAST_LOGIN_TIME, STATUS, AGE, GENDER, 
+    ISDEFAULT, ORGANIZATION_ID
+  </sql>
+  <sql id="limit_sql">
+    <if test="page_sql != null and page_sql != ''">
+      ${page_sql}
+    </if>
+  </sql>
+  <sql id="where_all">
+    <where>
+      <if test="findContent != null and findContent !='' " >
+        and (
+        LOWER(NICKNAME) like  LOWER(CONCAT("%",#{findContent,jdbcType=VARCHAR},"%")) or
+        LOWER(EMAIL) like  LOWER(CONCAT("%",#{findContent,jdbcType=VARCHAR},"%"))
+        )
+      </if>
+    </where>
+  </sql>
+  <select id="findAll" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from SYS_USER
+    <include refid="where_all"/>
+    <include refid="limit_sql" />
+  </select>
+  <select id="findCount" resultMap="BaseResultMap" >
+    select count(id) from  SYS_USER
+    <include refid="where_all" />
+  </select>
+
+  <!-- 用户权限分配的分页查询 -->
+  <select id="findUserAndRole" resultType="com.ic.permission.bo.UserRoleAllocationBo">
+    select U.ID,U.NICKNAME,U.EMAIL,U.CREATE_TIME,U.LAST_LOGIN_TIME,U.STATUS ,GROUP_CONCAT(SR.NAME) ROLENAMES,GROUP_CONCAT(SR.ID) ROLEIDS FROM
+    SYS_USER U
+    left join SYS_USER_ROLE SUR on SUR.UID = U.ID
+    left join SYS_ROLE SR on SR.ID = SUR.RID
+    <where>
+      <if test="findContent != null and findContent !='' " >
+        and (
+        LOWER(U.NICKNAME) like  LOWER(CONCAT("%",#{findContent,jdbcType=VARCHAR},"%")) or
+        LOWER(U.EMAIL) like  LOWER(CONCAT("%",#{findContent,jdbcType=VARCHAR},"%"))
+        )
+      </if>
+    </where>
+    group by u.id
+  </select>
+  <select id="selectRoleByUserId" resultType="com.ic.permission.bo.URoleBo">
+    select SR.ID,SR.NAME,SR.TYPE,ifnull(SU.ID,0) marker,SU.ID userId from SYS_ROLE SR
+    left join SYS_USER_ROLE SUR on SUR.RID = UR.ID
+    left join (select ID from SYS_USER where ID =#{id,jdbcType=BIGINT}) SU on SU.ID = SUR.UID
+    group by SR.ID
+  </select>
+
+  <!-- 登录 -->
+  <select id="login" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from SYS_USER
+    where EMAIL = #{email,jdbcType=VARCHAR} and  PASSWORD = #{pswd,jdbcType=VARCHAR}
+  </select>
+  <!-- 根据邮箱|帐号查询 -->
+  <select id="findUserByEmail" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from SYS_USER
+    where EMAIL = #{email,jdbcType=VARCHAR}
+  </select>
+
+  <!--以下为自动生成-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from SYS_USER
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from SYS_USER
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.ic.common.model.SysUser" >
+    insert into SYS_USER (ID, NICKNAME, EMAIL, 
+      PASSWORD, CREATE_TIME, LAST_LOGIN_TIME, 
+      STATUS, AGE, GENDER, 
+      ISDEFAULT, ORGANIZATION_ID)
+    values (#{id,jdbcType=DECIMAL}, #{nickname,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{password,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{lastLoginTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=DECIMAL}, #{age,jdbcType=DECIMAL}, #{gender,jdbcType=DECIMAL}, 
+      #{isdefault,jdbcType=DECIMAL}, #{organizationId,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ic.common.model.SysUser" >
+    insert into SYS_USER
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="nickname != null" >
+        NICKNAME,
+      </if>
+      <if test="email != null" >
+        EMAIL,
+      </if>
+      <if test="password != null" >
+        PASSWORD,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="lastLoginTime != null" >
+        LAST_LOGIN_TIME,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="age != null" >
+        AGE,
+      </if>
+      <if test="gender != null" >
+        GENDER,
+      </if>
+      <if test="isdefault != null" >
+        ISDEFAULT,
+      </if>
+      <if test="organizationId != null" >
+        ORGANIZATION_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="nickname != null" >
+        #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastLoginTime != null" >
+        #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=DECIMAL},
+      </if>
+      <if test="age != null" >
+        #{age,jdbcType=DECIMAL},
+      </if>
+      <if test="gender != null" >
+        #{gender,jdbcType=DECIMAL},
+      </if>
+      <if test="isdefault != null" >
+        #{isdefault,jdbcType=DECIMAL},
+      </if>
+      <if test="organizationId != null" >
+        #{organizationId,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ic.common.model.SysUser" >
+    update SYS_USER
+    <set >
+      <if test="nickname != null" >
+        NICKNAME = #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        EMAIL = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        PASSWORD = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastLoginTime != null" >
+        LAST_LOGIN_TIME = #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=DECIMAL},
+      </if>
+      <if test="age != null" >
+        AGE = #{age,jdbcType=DECIMAL},
+      </if>
+      <if test="gender != null" >
+        GENDER = #{gender,jdbcType=DECIMAL},
+      </if>
+      <if test="isdefault != null" >
+        ISDEFAULT = #{isdefault,jdbcType=DECIMAL},
+      </if>
+      <if test="organizationId != null" >
+        ORGANIZATION_ID = #{organizationId,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ic.common.model.SysUser" >
+    update SYS_USER
+    set NICKNAME = #{nickname,jdbcType=VARCHAR},
+      EMAIL = #{email,jdbcType=VARCHAR},
+      PASSWORD = #{password,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      LAST_LOGIN_TIME = #{lastLoginTime,jdbcType=TIMESTAMP},
+      STATUS = #{status,jdbcType=DECIMAL},
+      AGE = #{age,jdbcType=DECIMAL},
+      GENDER = #{gender,jdbcType=DECIMAL},
+      ISDEFAULT = #{isdefault,jdbcType=DECIMAL},
+      ORGANIZATION_ID = #{organizationId,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>

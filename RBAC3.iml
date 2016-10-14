@@ -54,7 +54,7 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-jdbc:4.2.5.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-tx:4.2.5.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.mybatis:mybatis-spring:1.1.1" level="project" />
-    <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.21" level="project" />
+    <orderEntry type="library" name="Maven: com.oracle:ojdbc6:11.2.0.4.0" level="project" />
     <orderEntry type="library" name="Maven: com.alibaba:druid:1.0.18" level="project" />
     <orderEntry type="module-library">
       <library name="Maven: com.alibaba:jconsole:1.8.0">

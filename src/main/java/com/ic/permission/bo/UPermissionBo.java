@@ -2,16 +2,15 @@ package com.ic.permission.bo;
 
 import java.io.Serializable;
 
-import com.ic.common.model.UPermission;
+import com.ic.common.model.SysResource;
 import com.ic.common.utils.StringUtils;
 
 /**
  * 
  * 权限选择
- * @author zhou-baicheng
  *
  */
-public class UPermissionBo extends UPermission implements Serializable {
+public class UPermissionBo extends SysResource implements Serializable {
 	private static final long serialVersionUID = 1L;
 	/**
 	 * 是否勾选

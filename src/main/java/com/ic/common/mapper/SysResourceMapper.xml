@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ic.common.dao.SysResourceMapper">
+    <resultMap id="BaseResultMap" type="com.ic.common.model.SysResource">
+        <id column="ID" property="id" jdbcType="DECIMAL"/>
+        <result column="NAME" property="name" jdbcType="VARCHAR"/>
+        <result column="URL" property="url" jdbcType="VARCHAR"/>
+        <result column="DESCRIPTION" property="description" jdbcType="VARCHAR"/>
+        <result column="ICON" property="icon" jdbcType="VARCHAR"/>
+        <result column="PID" property="pid" jdbcType="DECIMAL"/>
+        <result column="SEQ" property="seq" jdbcType="DECIMAL"/>
+        <result column="STATUS" property="status" jdbcType="DECIMAL"/>
+        <result column="RESOURCE_TYPE" property="resourceType" jdbcType="DECIMAL"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    ID, NAME, URL, DESCRIPTION, ICON, PID, SEQ, STATUS, RESOURCE_TYPE, CREATE_TIME
+  </sql>
+
+    <sql id="limit_sql">
+        <if test="page_sql != null and page_sql != ''">
+            ${page_sql}
+        </if>
+    </sql>
+
+    <sql id="where_all">
+        <where>
+            <if test="findContent != null and findContent !='' ">
+                and (
+                LOWER(NAME) like CONCAT("%",#{findContent,jdbcType=VARCHAR},"%") or
+                LOWER(URL) like CONCAT("%",#{findContent,jdbcType=VARCHAR},"%")
+                )
+            </if>
+        </where>
+    </sql>
+    <select id="findAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from SYS_RESOURCE
+        <include refid="where_all"/>
+        <include refid="limit_sql"/>
+    </select>
+    <select id="findCount" resultMap="BaseResultMap">
+        select count(ID) from SYS_RESOURCE
+        <include refid="where_all"/>
+    </select>
+
+    <select id="selectPermissionById" resultType="com.ic.permission.bo.UPermissionBo">
+      SELECT UP. ID,"MAX" (UR. ID) roleId,UP. NAME,UP.URL,"MAX" (NVL(UR. ID, 0)) marker FROM SYS_RESOURCE UP
+      LEFT JOIN SYS_ROLE_RESOURCE URP ON URP.RES_ID = UP. ID
+      LEFT JOIN (SELECT ID FROM SYS_ROLE WHERE ID = #{id,jdbcType=BIGINT}) UR ON UR. ID = URP.ROLE_ID
+      GROUP BY UP."ID",UP."NAME",UP.URL
+  </select>
+    <!-- 根据用ID查询permission -->
+    <select id="findPermissionByUserId" resultType="java.lang.String">
+    select P.URL from SYS_RESOURCE P , SYS_ROLE_RESOURCE RP, SYS_USER_ROLE UR
+    where UR.U_ID = #{id,jdbcType=BIGINT} and P.ID = RP.RES_ID and RP.ROLE_ID = UR.R_ID
+  </select>
+
+    <!--一下为自动生成-->
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from SYS_RESOURCE
+        where ID = #{id,jdbcType=DECIMAL}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from SYS_RESOURCE
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+    <insert id="insert" parameterType="com.ic.common.model.SysResource">
+    insert into SYS_RESOURCE (ID, NAME, URL, 
+      DESCRIPTION, ICON, PID, 
+      SEQ, STATUS, RESOURCE_TYPE, 
+      CREATE_TIME)
+    values (#{id,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
+      #{description,jdbcType=VARCHAR}, #{icon,jdbcType=VARCHAR}, #{pid,jdbcType=DECIMAL}, 
+      #{seq,jdbcType=DECIMAL}, #{status,jdbcType=DECIMAL}, #{resourceType,jdbcType=DECIMAL}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+    <insert id="insertSelective" parameterType="com.ic.common.model.SysResource">
+
+        <selectKey keyProperty="id" resultType="Long" order="BEFORE">
+            SELECT IC_SEQ_ID.nextval FROM dual
+        </selectKey>
+        insert into SYS_RESOURCE
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="name != null">
+                NAME,
+            </if>
+            <if test="url != null">
+                URL,
+            </if>
+            <if test="description != null">
+                DESCRIPTION,
+            </if>
+            <if test="icon != null">
+                ICON,
+            </if>
+            <if test="pid != null">
+                PID,
+            </if>
+            <if test="seq != null">
+                SEQ,
+            </if>
+            <if test="status != null">
+                STATUS,
+            </if>
+            <if test="resourceType != null">
+                RESOURCE_TYPE,
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=DECIMAL},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="url != null">
+                #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="icon != null">
+                #{icon,jdbcType=VARCHAR},
+            </if>
+            <if test="pid != null">
+                #{pid,jdbcType=DECIMAL},
+            </if>
+            <if test="seq != null">
+                #{seq,jdbcType=DECIMAL},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=DECIMAL},
+            </if>
+            <if test="resourceType != null">
+                #{resourceType,jdbcType=DECIMAL},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ic.common.model.SysResource">
+        update SYS_RESOURCE
+        <set>
+            <if test="name != null">
+                NAME = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="url != null">
+                URL = #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                DESCRIPTION = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="icon != null">
+                ICON = #{icon,jdbcType=VARCHAR},
+            </if>
+            <if test="pid != null">
+                PID = #{pid,jdbcType=DECIMAL},
+            </if>
+            <if test="seq != null">
+                SEQ = #{seq,jdbcType=DECIMAL},
+            </if>
+            <if test="status != null">
+                STATUS = #{status,jdbcType=DECIMAL},
+            </if>
+            <if test="resourceType != null">
+                RESOURCE_TYPE = #{resourceType,jdbcType=DECIMAL},
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=DECIMAL}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ic.common.model.SysResource">
+    update SYS_RESOURCE
+    set NAME = #{name,jdbcType=VARCHAR},
+      URL = #{url,jdbcType=VARCHAR},
+      DESCRIPTION = #{description,jdbcType=VARCHAR},
+      ICON = #{icon,jdbcType=VARCHAR},
+      PID = #{pid,jdbcType=DECIMAL},
+      SEQ = #{seq,jdbcType=DECIMAL},
+      STATUS = #{status,jdbcType=DECIMAL},
+      RESOURCE_TYPE = #{resourceType,jdbcType=DECIMAL},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>

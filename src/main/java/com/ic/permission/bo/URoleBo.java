@@ -2,10 +2,10 @@ package com.ic.permission.bo;
 
 import java.io.Serializable;
 
-import com.ic.common.model.URole;
+import com.ic.common.model.SysRole;
 import com.ic.common.utils.StringUtils;
 
-public class URoleBo extends URole implements Serializable{
+public class URoleBo extends SysRole implements Serializable{
 	private static final long serialVersionUID = 1L;
 	/**
 	 * 用户ID (用String， 考虑多个ID，现在只有一个ID)

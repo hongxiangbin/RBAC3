@@ -19,13 +19,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ic.common.controller.BaseController;
-import com.ic.common.model.UUser;
+import com.ic.common.model.SysUser;
 import com.ic.common.utils.LoggerUtils;
 import com.ic.common.utils.StringUtils;
 import com.ic.common.utils.VerifyCodeUtils;
 import com.ic.core.shiro.token.manager.TokenManager;
 import com.ic.user.manager.UserManager;
-import com.ic.user.service.UUserService;
+import com.ic.user.service.SysUserService;
 
 /**
  * 
@@ -38,7 +38,7 @@ import com.ic.user.service.UUserService;
 public class UserLoginController extends BaseController {
 
 	@Resource
-	UUserService userService;
+	SysUserService userService;
 	
 	/**
 	 * 登录跳转
@@ -66,15 +66,15 @@ public class UserLoginController extends BaseController {
 	 */
 	@RequestMapping(value="subRegister",method=RequestMethod.POST)
 	@ResponseBody
-	public Map<String,Object> subRegister(String vcode,UUser entity){
+	public Map<String,Object> subRegister(String vcode,SysUser entity){
 		resultMap.put("status", 400);
 		if(!VerifyCodeUtils.verifyCode(vcode)){
 			resultMap.put("message", "验证码不正确！");
 			return resultMap;
 		}
 		String email =  entity.getEmail();
-		
-		UUser user = userService.findUserByEmail(email);
+
+		SysUser user = userService.findUserByEmail(email);
 		if(null != user){
 			resultMap.put("message", "帐号|Email已经存在！");
 			return resultMap;
@@ -85,7 +85,7 @@ public class UserLoginController extends BaseController {
 		//把密码md5
 		entity = UserManager.md5Pswd(entity);
 		//设置有效
-		entity.setStatus(UUser._1);
+		entity.setStatus(SysUser._1);
 		
 		entity = userService.insert(entity);
 		LoggerUtils.fmtDebug(getClass(), "注册插入完毕！", JSONObject.fromObject(entity).toString());
@@ -104,14 +104,12 @@ public class UserLoginController extends BaseController {
 	 */
 	@RequestMapping(value="submitLogin",method=RequestMethod.POST)
 	@ResponseBody
-	public Map<String,Object> submitLogin(UUser entity,Boolean rememberMe,HttpServletRequest request){
-		
+	public Map<String,Object> submitLogin(SysUser entity, Boolean rememberMe, HttpServletRequest request){
+
 		try {
 			entity = TokenManager.login(entity,rememberMe);
 			resultMap.put("status", 200);
 			resultMap.put("message", "登录成功");
-			
-			
 			/**
 			 * shiro 获取登录之前的地址
 			 * 之前0.1版本这个没判断空。

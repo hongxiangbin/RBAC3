@@ -5,35 +5,35 @@ import java.util.Map;
 
 import org.springframework.ui.ModelMap;
 
-import com.ic.common.model.UUser;
+import com.ic.common.model.SysUser;
 import com.ic.core.mybatis.page.Pagination;
 import com.ic.permission.bo.URoleBo;
 import com.ic.permission.bo.UserRoleAllocationBo;
 
-public interface UUserService {
+public interface SysUserService {
 
 	int deleteByPrimaryKey(Long id);
 
-	UUser insert(UUser record);
+	SysUser insert(SysUser record);
 
-    UUser insertSelective(UUser record);
+	SysUser insertSelective(SysUser record);
 
-    UUser selectByPrimaryKey(Long id);
+	SysUser selectByPrimaryKey(Long id);
 
-    int updateByPrimaryKeySelective(UUser record);
+    int updateByPrimaryKeySelective(SysUser record);
 
-    int updateByPrimaryKey(UUser record);
-    
-    UUser login(String email, String pswd);
+    int updateByPrimaryKey(SysUser record);
 
-	UUser findUserByEmail(String email);
+	SysUser login(String email, String pswd);
 
-	Pagination<UUser> findByPage(Map<String, Object> resultMap, Integer pageNo,
+	SysUser findUserByEmail(String email);
+
+	Pagination<SysUser> findByPage(Map<String, Object> resultMap, Integer pageNo,
 								 Integer pageSize);
 
 	Map<String, Object> deleteUserById(String ids);
 
-	Map<String, Object> updateForbidUserById(Long id, Long status);
+	Map<String, Object> updateForbidUserById(Long id, Short status);
 
 	Pagination<UserRoleAllocationBo> findUserAndRole(ModelMap modelMap,
 													 Integer pageNo, Integer pageSize);

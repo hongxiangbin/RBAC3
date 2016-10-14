@@ -16,7 +16,7 @@ import com.ic.core.mybatis.page.Pagination;
 import com.ic.permission.bo.URoleBo;
 import com.ic.permission.bo.UserRoleAllocationBo;
 import com.ic.permission.service.PermissionService;
-import com.ic.user.service.UUserService;
+import com.ic.user.service.SysUserService;
 /**
  *
  * 用户角色分配
@@ -27,7 +27,7 @@ import com.ic.user.service.UUserService;
 @RequestMapping("role")
 public class UserRoleAllocationController extends BaseController {
 	@Autowired
-	UUserService userService;
+	SysUserService userService;
 	@Autowired
 	PermissionService permissionService;
 	/**

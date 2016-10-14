@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.ic.common.model.UPermission;
+import com.ic.common.model.SysResource;
 import com.ic.core.mybatis.page.Pagination;
 import com.ic.permission.bo.UPermissionBo;
 
@@ -12,19 +12,19 @@ public interface PermissionService {
 
 	int deleteByPrimaryKey(Long id);
 
-	UPermission insert(UPermission record);
+	SysResource insert(SysResource record);
 
-    UPermission insertSelective(UPermission record);
+	SysResource insertSelective(SysResource record);
 
-    UPermission selectByPrimaryKey(Long id);
+	SysResource selectByPrimaryKey(Long id);
 
-    int updateByPrimaryKeySelective(UPermission record);
+    int updateByPrimaryKeySelective(SysResource record);
 
-    int updateByPrimaryKey(UPermission record);
+    int updateByPrimaryKey(SysResource record);
 
 	Map<String, Object> deletePermissionById(String ids);
 
-	Pagination<UPermission> findPage(Map<String, Object> resultMap, Integer pageNo,
+	Pagination<SysResource> findPage(Map<String, Object> resultMap, Integer pageNo,
 									 Integer pageSize);
 	List<UPermissionBo> selectPermissionById(Long id);
 

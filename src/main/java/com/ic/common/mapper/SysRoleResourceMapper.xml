@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ic.common.dao.SysRoleResourceMapper" >
+  <resultMap id="BaseResultMap" type="com.ic.common.model.SysRoleResourceKey" >
+    <id column="ROLE_ID" property="roleId" jdbcType="DECIMAL" />
+    <id column="RES_ID" property="resId" jdbcType="DECIMAL" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    ROLE_ID, RES_ID
+  </sql>
+
+  <!-- 根据权限ID查找 -->
+  <select id="findRolePermissionByPid" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from SYS_ROLE_RESOURCE
+    where RES_ID =  #{id,jdbcType=BIGINT}
+  </select>
+  <!-- 根据角色ID查找 -->
+  <select id="findRolePermissionByRid" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from SYS_ROLE_RESOURCE
+    where RES_ID =  #{id,jdbcType=BIGINT}
+  </select>
+  <!-- 根据权限 && 角色ID查找 -->
+  <select id="find" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from SYS_ROLE_RESOURCE
+    where ROLE_ID =  #{rid,jdbcType=BIGINT}
+    and  RES_ID =  #{pid,jdbcType=BIGINT}
+  </select>
+  <!-- 根据权限ID删除-->
+  <delete id="deleteByPid">
+    delete from SYS_ROLE_RESOURCE where RES_ID =  #{id,jdbcType=BIGINT}
+  </delete>
+  <!-- 根据角色ID删除-->
+  <delete id="deleteByRid">
+    delete from SYS_ROLE_RESOURCE where ROLE_ID =  #{id,jdbcType=BIGINT}
+  </delete>
+  <!-- 根据角色ID && 权限ID删除-->
+  <delete id="delete">
+    delete from SYS_ROLE_RESOURCE where ROLE_ID =  #{rid,jdbcType=BIGINT}
+    and  RES_ID =  #{pid,jdbcType=BIGINT}
+  </delete>
+  <!-- 根据角色IDs删除-->
+  <delete id="deleteByRids">
+    delete from SYS_ROLE_RESOURCE where ROLE_ID in(${roleIds})
+  </delete>
+
+  <!--以下为自动生成-->
+  <delete id="deleteByPrimaryKey" parameterType="com.ic.common.model.SysRoleResourceKey" >
+    delete from SYS_ROLE_RESOURCE
+    where ROLE_ID = #{roleId,jdbcType=DECIMAL}
+      and RES_ID = #{resId,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.ic.common.model.SysRoleResourceKey" >
+    insert into SYS_ROLE_RESOURCE (ROLE_ID, RES_ID)
+    values (#{roleId,jdbcType=DECIMAL}, #{resId,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ic.common.model.SysRoleResourceKey" >
+    insert into SYS_ROLE_RESOURCE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="roleId != null" >
+        ROLE_ID,
+      </if>
+      <if test="resId != null" >
+        RES_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="roleId != null" >
+        #{roleId,jdbcType=DECIMAL},
+      </if>
+      <if test="resId != null" >
+        #{resId,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+</mapper>

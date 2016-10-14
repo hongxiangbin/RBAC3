@@ -5,14 +5,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.ic.common.model.SysRole;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ic.common.dao.URoleMapper;
-import com.ic.common.dao.URolePermissionMapper;
-import com.ic.common.dao.UUserMapper;
-import com.ic.common.model.URole;
+import com.ic.common.dao.SysRoleMapper;
+import com.ic.common.dao.SysRoleResourceMapper;
+import com.ic.common.dao.SysUserMapper;
+import com.ic.common.model.SysRole;
 import com.ic.common.utils.LoggerUtils;
 import com.ic.core.mybatis.BaseMybatisDao;
 import com.ic.core.mybatis.page.Pagination;
@@ -22,14 +23,14 @@ import com.ic.permission.service.RoleService;
 
 @Service
 @SuppressWarnings("unchecked")
-public class RoleServiceImpl extends BaseMybatisDao<URoleMapper> implements RoleService {
+public class RoleServiceImpl extends BaseMybatisDao<SysRoleMapper> implements RoleService {
 
 	@Autowired
-	URoleMapper roleMapper;
+	SysRoleMapper roleMapper;
 	@Autowired
-	UUserMapper userMapper;
+	SysUserMapper userMapper;
 	@Autowired
-	URolePermissionMapper rolePermissionMapper;
+	SysRoleResourceMapper rolePermissionMapper;
 
 	@Override
 	public int deleteByPrimaryKey(Long id) {
@@ -37,33 +38,33 @@ public class RoleServiceImpl extends BaseMybatisDao<URoleMapper> implements Role
 	}
 
 	@Override
-	public int insert(URole record) {
+	public int insert(SysRole record) {
 		return roleMapper.insert(record);
 	}
 
 	@Override
-	public int insertSelective(URole record) {
+	public int insertSelective(SysRole record) {
 		return roleMapper.insertSelective(record);
 	}
 
 	@Override
-	public URole selectByPrimaryKey(Long id) {
+	public SysRole selectByPrimaryKey(Long id) {
 		return roleMapper.selectByPrimaryKey(id);
 	}
 
 	@Override
-	public int updateByPrimaryKey(URole record) {
+	public int updateByPrimaryKey(SysRole record) {
 		return roleMapper.updateByPrimaryKey(record);
 	}
 
 	@Override
-	public int updateByPrimaryKeySelective(URole record) {
+	public int updateByPrimaryKeySelective(SysRole record) {
 		return roleMapper.updateByPrimaryKeySelective(record);
 	}
 
 	
 	@Override
-	public Pagination<URole> findPage(Map<String, Object> resultMap,
+	public Pagination<SysRole> findPage(Map<String, Object> resultMap,
 			Integer pageNo, Integer pageSize) {
 		return super.findPage(resultMap, pageNo, pageSize);
 	}
@@ -111,7 +112,7 @@ public class RoleServiceImpl extends BaseMybatisDao<URoleMapper> implements Role
 	}
 
 	@Override
-	public List<URole> findNowAllPermission() {
+	public List<SysRole> findNowAllPermission() {
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("userId", TokenManager.getUserId());
 		return roleMapper.findNowAllPermission(map);

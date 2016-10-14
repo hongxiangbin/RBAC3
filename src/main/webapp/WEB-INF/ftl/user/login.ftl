@@ -232,7 +232,7 @@
 			            return false;
 			        }
 			        var pswd = MD5(username +"#" + password),
-			        	data = {pswd:pswd,email:username,rememberMe:$("#rememberMe").is(':checked')};
+			        	data = {password:pswd,email:username,rememberMe:$("#rememberMe").is(':checked')};
 			        var load = layer.load();
 			        $.post("${basePath}/u/submitLogin.shtml",data ,function(result){
 			        	layer.close(load);

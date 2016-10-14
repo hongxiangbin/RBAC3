@@ -4,15 +4,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ic.common.model.SysUserRoleKey;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
-import com.ic.common.dao.UUserMapper;
-import com.ic.common.dao.UUserRoleMapper;
-import com.ic.common.model.UUser;
-import com.ic.common.model.UUserRole;
+import com.ic.common.dao.SysUserMapper;
+import com.ic.common.dao.SysUserRoleMapper;
+import com.ic.common.model.SysUser;
+import com.ic.common.model.SysRoleResourceKey;
 import com.ic.common.utils.LoggerUtils;
 import com.ic.core.mybatis.BaseMybatisDao;
 import com.ic.core.mybatis.page.Pagination;
@@ -20,19 +21,19 @@ import com.ic.core.shiro.session.CustomSessionManager;
 import com.ic.core.shiro.token.manager.TokenManager;
 import com.ic.permission.bo.URoleBo;
 import com.ic.permission.bo.UserRoleAllocationBo;
-import com.ic.user.service.UUserService;
+import com.ic.user.service.SysUserService;
 
 @Service
-public class UUserServiceImpl extends BaseMybatisDao<UUserMapper> implements UUserService {
+public class SysUserServiceImpl extends BaseMybatisDao<SysUserMapper> implements SysUserService {
 	/***
 	 * 用户手动操作Session
 	 * */
 	@Autowired
 	CustomSessionManager customSessionManager;
 	@Autowired
-	UUserMapper userMapper;
+	SysUserMapper userMapper;
 	@Autowired
-	UUserRoleMapper userRoleMapper;
+	SysUserRoleMapper userRoleMapper;
 
 	@Override
 	public int deleteByPrimaryKey(Long id) {
@@ -40,50 +41,50 @@ public class UUserServiceImpl extends BaseMybatisDao<UUserMapper> implements UUs
 	}
 
 	@Override
-	public UUser insert(UUser entity) {
+	public SysUser insert(SysUser entity) {
 		userMapper.insert(entity);
 		return entity;
 	}
 
 	@Override
-	public UUser insertSelective(UUser entity) {
+	public SysUser insertSelective(SysUser entity) {
 		userMapper.insertSelective(entity);
 		return entity;
 	}
 
 	@Override
-	public UUser selectByPrimaryKey(Long id) {
+	public SysUser selectByPrimaryKey(Long id) {
 		return userMapper.selectByPrimaryKey(id);
 	}
 
 	@Override
-	public int updateByPrimaryKey(UUser entity) {
+	public int updateByPrimaryKey(SysUser entity) {
 		return userMapper.updateByPrimaryKey(entity);
 	}
 
 	@Override
-	public int updateByPrimaryKeySelective(UUser entity) {
+	public int updateByPrimaryKeySelective(SysUser entity) {
 		return userMapper.updateByPrimaryKeySelective(entity);
 	}
 
 	@Override
-	public UUser login(String email ,String pswd) {
+	public SysUser login(String email , String pswd) {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("email", email);
 		map.put("pswd", pswd);
-		UUser user = userMapper.login(map);
+		SysUser user = userMapper.login(map);
 		return user;
 	}
 
 	@Override
-	public UUser findUserByEmail(String email) {
+	public SysUser findUserByEmail(String email) {
 		return userMapper.findUserByEmail(email);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Pagination<UUser> findByPage(Map<String, Object> resultMap,
-			Integer pageNo, Integer pageSize) {
+	public Pagination<SysUser> findByPage(Map<String, Object> resultMap,
+										Integer pageNo, Integer pageSize) {
 		return super.findPage(resultMap, pageNo, pageSize);
 	}
 
@@ -113,10 +114,10 @@ public class UUserServiceImpl extends BaseMybatisDao<UUserMapper> implements UUs
 	}
 
 	@Override
-	public Map<String, Object> updateForbidUserById(Long id, Long status) {
+	public Map<String, Object> updateForbidUserById(Long id, Short status) {
 		Map<String,Object> resultMap = new HashMap<String,Object>();
 		try {
-			UUser user = selectByPrimaryKey(id);
+			SysUser user = selectByPrimaryKey(id);
 			user.setStatus(status);
 			updateByPrimaryKeySelective(user);
 			
@@ -166,7 +167,7 @@ public class UUserServiceImpl extends BaseMybatisDao<UUserMapper> implements UUs
 				for (String rid : idArray) {
 					//这里严谨点可以判断，也可以不判断。这个{@link StringUtils 我是重写了的} 
 					if(StringUtils.isNotBlank(rid)){
-						UUserRole entity = new UUserRole(userId,new Long(rid));
+						SysUserRoleKey entity = new SysUserRoleKey(userId,new Long(rid));
 						count += userRoleMapper.insertSelective(entity);
 					}
 				}

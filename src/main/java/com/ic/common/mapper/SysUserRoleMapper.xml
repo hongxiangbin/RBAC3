@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ic.common.dao.SysUserRoleMapper" >
+  <resultMap id="BaseResultMap" type="com.ic.common.model.SysUserRoleKey" >
+    <id column="U_ID" property="uid" jdbcType="DECIMAL" />
+    <id column="R_ID" property="rid" jdbcType="DECIMAL" />
+  </resultMap>
+
+  <!-- 根据用户ID删除-->
+  <delete id="deleteByUserId">
+    delete from SYS_USER_ROLE where U_ID =  #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteRoleByUserIds">
+    delete from SYS_USER_ROLE where U_ID in(${userIds})
+  </delete>
+  <!-- 根据用户roleId查询用户ID -->
+  <select id="findUserIdByRoleId" resultType="long">
+    select U_ID from SYS_USER_ROLE where R_ID =  #{id,jdbcType=BIGINT}
+  </select>
+
+  <!--以下为自动生成-->
+  <delete id="deleteByPrimaryKey" parameterType="com.ic.common.model.SysUserRoleKey" >
+    delete from SYS_USER_ROLE
+    where U_ID = #{uid,jdbcType=DECIMAL}
+      and R_ID = #{rid,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.ic.common.model.SysUserRoleKey" >
+    insert into SYS_USER_ROLE (U_ID, R_ID)
+    values (#{uid,jdbcType=DECIMAL}, #{rid,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ic.common.model.SysUserRoleKey" >
+    insert into SYS_USER_ROLE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="uid != null" >
+        U_ID,
+      </if>
+      <if test="rid != null" >
+        R_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="uid != null" >
+        #{uid,jdbcType=DECIMAL},
+      </if>
+      <if test="rid != null" >
+        #{rid,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+</mapper>

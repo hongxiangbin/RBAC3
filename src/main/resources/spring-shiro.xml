@@ -179,8 +179,8 @@
 	</bean>
 	<!-- Shiro生命周期处理器-->
 	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
-	
-	
+
+
 	<!-- ============================================================================ -->
 
 </beans>

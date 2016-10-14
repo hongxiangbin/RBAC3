@@ -3,12 +3,12 @@ package com.ic.user.bo;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.ic.common.model.UUser;
+import com.ic.common.model.SysUser;
 /**
  * Session  + User Bo
  *
  */
-public class UserOnlineBo extends UUser implements Serializable {
+public class UserOnlineBo extends SysUser implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -28,7 +28,7 @@ public class UserOnlineBo extends UUser implements Serializable {
 	public UserOnlineBo() {
 	}
 	
-	public UserOnlineBo(UUser user) {
+	public UserOnlineBo(SysUser user) {
 		super(user);
 	}
 	

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ic.common.dao.DicDictionaryMapper" >
+  <resultMap id="BaseResultMap" type="com.ic.common.model.DicDictionary" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="CODE" property="code" jdbcType="VARCHAR" />
+    <result column="TEXT" property="text" jdbcType="VARCHAR" />
+    <result column="DICTYPE_ID" property="dictypeId" jdbcType="DECIMAL" />
+    <result column="SEQ" property="seq" jdbcType="DECIMAL" />
+    <result column="STATUS" property="status" jdbcType="DECIMAL" />
+    <result column="ISDEFAULT" property="isdefault" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, CODE, TEXT, DICTYPE_ID, SEQ, STATUS, ISDEFAULT
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from DIC_DICTIONARY
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from DIC_DICTIONARY
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.ic.common.model.DicDictionary" >
+    insert into DIC_DICTIONARY (ID, CODE, TEXT, 
+      DICTYPE_ID, SEQ, STATUS, 
+      ISDEFAULT)
+    values (#{id,jdbcType=DECIMAL}, #{code,jdbcType=VARCHAR}, #{text,jdbcType=VARCHAR}, 
+      #{dictypeId,jdbcType=DECIMAL}, #{seq,jdbcType=DECIMAL}, #{status,jdbcType=DECIMAL}, 
+      #{isdefault,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ic.common.model.DicDictionary" >
+    insert into DIC_DICTIONARY
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="code != null" >
+        CODE,
+      </if>
+      <if test="text != null" >
+        TEXT,
+      </if>
+      <if test="dictypeId != null" >
+        DICTYPE_ID,
+      </if>
+      <if test="seq != null" >
+        SEQ,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="isdefault != null" >
+        ISDEFAULT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="text != null" >
+        #{text,jdbcType=VARCHAR},
+      </if>
+      <if test="dictypeId != null" >
+        #{dictypeId,jdbcType=DECIMAL},
+      </if>
+      <if test="seq != null" >
+        #{seq,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=DECIMAL},
+      </if>
+      <if test="isdefault != null" >
+        #{isdefault,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ic.common.model.DicDictionary" >
+    update DIC_DICTIONARY
+    <set >
+      <if test="code != null" >
+        CODE = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="text != null" >
+        TEXT = #{text,jdbcType=VARCHAR},
+      </if>
+      <if test="dictypeId != null" >
+        DICTYPE_ID = #{dictypeId,jdbcType=DECIMAL},
+      </if>
+      <if test="seq != null" >
+        SEQ = #{seq,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=DECIMAL},
+      </if>
+      <if test="isdefault != null" >
+        ISDEFAULT = #{isdefault,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ic.common.model.DicDictionary" >
+    update DIC_DICTIONARY
+    set CODE = #{code,jdbcType=VARCHAR},
+      TEXT = #{text,jdbcType=VARCHAR},
+      DICTYPE_ID = #{dictypeId,jdbcType=DECIMAL},
+      SEQ = #{seq,jdbcType=DECIMAL},
+      STATUS = #{status,jdbcType=DECIMAL},
+      ISDEFAULT = #{isdefault,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>

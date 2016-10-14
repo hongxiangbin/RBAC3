@@ -5,9 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.ic.common.model.UPermission;
-import com.ic.common.model.URole;
-import com.ic.common.model.UUser;
+import com.ic.common.model.SysResource;
+import com.ic.common.model.SysRole;
+import com.ic.common.model.SysUser;
 import com.ic.common.utils.MathUtil;
 
 public class UserManager {
@@ -17,9 +17,9 @@ public class UserManager {
 	 * @param user
 	 * @return
 	 */
-	public static UUser md5Pswd(UUser user){
+	public static SysUser md5Pswd(SysUser user){
 		//密码为   email + '#' + pswd，然后MD5
-		user.setPswd(md5Pswd(user.getEmail(),user.getPswd()));
+		user.setPassword(md5Pswd(user.getEmail(),user.getPassword()));
 		return user;
 	}
 	/**
@@ -38,19 +38,19 @@ public class UserManager {
 	 * @param roles
 	 * @return
 	 */
-	public static List<Map<String,Object>> toTreeData(List<URole> roles){
+	public static List<Map<String,Object>> toTreeData(List<SysRole> roles){
 		List<Map<String,Object>> resultData = new LinkedList<Map<String,Object>>();
-		for (URole u : roles) {
+		for (SysRole u : roles) {
 			//角色列表
 			Map<String,Object> map = new LinkedHashMap<String, Object>();
 			map.put("text", u.getName());//名称
 			map.put("href", "javascript:void(0)");//链接
-			List<UPermission> ps = u.getPermissions();
+			List<SysResource> ps = u.getResources();
 			map.put("tags",  new Integer[]{ps.size()});//显示子数据条数
 			if(null != ps && ps.size() > 0){
 				List<Map<String,Object>> list = new LinkedList<Map<String,Object>>();
 				//权限列表
-				for (UPermission up : ps) {
+				for (SysResource up : ps) {
 					Map<String,Object> mapx = new LinkedHashMap<String, Object>();
 					mapx.put("text", up.getName());//权限名称
 					mapx.put("href", up.getUrl());//权限url

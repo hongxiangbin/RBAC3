@@ -23,7 +23,7 @@
 		<constructor-arg index="0" ref="jedisPoolConfig" />
 	    <constructor-arg index="2" value="6379"  name="port" type="int"/>
 	    <constructor-arg index="3" value="5000"  name="timeout" type="int"/>
-	    <constructor-arg index="1" value="127.0.0.1" name="host" type="java.lang.String"/>
+	    <constructor-arg index="1" value="192.168.1.15" name="host" type="java.lang.String"/>
 	</bean>
 	<!-- 
 		这种 arguments 构造的方式，之前配置有缺点。

@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.servlet.view.freemarker.FreeMarkerView;
 
-import com.ic.common.model.UUser;
+import com.ic.common.model.SysUser;
 import com.ic.common.utils.LoggerUtils;
 import com.ic.core.shiro.token.manager.TokenManager;
 import com.ic.core.statics.Constant;
@@ -22,7 +22,7 @@ public class FreeMarkerViewExtend extends FreeMarkerView {
 		}
 		model.put(Constant.CONTEXT_PATH, request.getContextPath());
 		model.putAll(Ferrmarker.initMap);
-		UUser token = TokenManager.getToken();
+		SysUser token = TokenManager.getToken();
 		//String ip = IPUtils.getIP(request);
 		model.put("token", token);//登录的token
 		model.put("_time", new Date().getTime());

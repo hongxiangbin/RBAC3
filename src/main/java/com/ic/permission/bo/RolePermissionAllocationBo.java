@@ -3,7 +3,6 @@ package com.ic.permission.bo;
 import java.io.Serializable;
 /**
  * 权限分配 查询列表BO
- * @author zhou-baicheng
  *
  */
 public class RolePermissionAllocationBo implements Serializable {

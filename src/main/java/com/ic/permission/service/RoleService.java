@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.ic.common.model.URole;
+import com.ic.common.model.SysRole;
 import com.ic.core.mybatis.page.Pagination;
 import com.ic.permission.bo.RolePermissionAllocationBo;
 
@@ -12,17 +12,17 @@ public interface RoleService {
 
 	int deleteByPrimaryKey(Long id);
 
-    int insert(URole record);
+    int insert(SysRole record);
 
-    int insertSelective(URole record);
+    int insertSelective(SysRole record);
 
-    URole selectByPrimaryKey(Long id);
+	SysRole selectByPrimaryKey(Long id);
 
-    int updateByPrimaryKeySelective(URole record);
+    int updateByPrimaryKeySelective(SysRole record);
 
-    int updateByPrimaryKey(URole record);
+    int updateByPrimaryKey(SysRole record);
 
-	Pagination<URole> findPage(Map<String, Object> resultMap, Integer pageNo,
+	Pagination<SysRole> findPage(Map<String, Object> resultMap, Integer pageNo,
 							   Integer pageSize);
 
 	Map<String, Object> deleteRoleById(String ids);
@@ -32,7 +32,7 @@ public interface RoleService {
 	//根据用户ID查询角色（role），放入到Authorization里。
 	Set<String> findRoleByUserId(Long userId);
 
-	List<URole> findNowAllPermission();
+	List<SysRole> findNowAllPermission();
 	//初始化数据
 	void initData();
 }
