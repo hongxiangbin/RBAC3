@@ -50,7 +50,7 @@
       LEFT JOIN SYS_ROLE_RESOURCE URP ON URP.RES_ID = UP. ID
       LEFT JOIN (SELECT ID FROM SYS_ROLE WHERE ID = #{id,jdbcType=BIGINT}) UR ON UR. ID = URP.ROLE_ID
       GROUP BY UP."ID",UP."NAME",UP.URL
-  </select>
+    </select>
     <!-- 根据用ID查询permission -->
     <select id="findPermissionByUserId" resultType="java.lang.String">
     select P.URL from SYS_RESOURCE P , SYS_ROLE_RESOURCE RP, SYS_USER_ROLE UR

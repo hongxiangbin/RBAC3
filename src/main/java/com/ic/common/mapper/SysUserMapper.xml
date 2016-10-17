@@ -47,10 +47,10 @@
 
   <!-- 用户权限分配的分页查询 -->
   <select id="findUserAndRole" resultType="com.ic.permission.bo.UserRoleAllocationBo">
-    select U.ID,U.NICKNAME,U.EMAIL,U.CREATE_TIME,U.LAST_LOGIN_TIME,U.STATUS ,GROUP_CONCAT(SR.NAME) ROLENAMES,GROUP_CONCAT(SR.ID) ROLEIDS FROM
+    select U.ID,U.NICKNAME,U.EMAIL,U.CREATE_TIME,U.LAST_LOGIN_TIME,U.STATUS ,wm_concat(SR.NAME) ROLENAMES,wm_concat(SR.ID) ROLEIDS FROM
     SYS_USER U
-    left join SYS_USER_ROLE SUR on SUR.UID = U.ID
-    left join SYS_ROLE SR on SR.ID = SUR.RID
+    left join SYS_USER_ROLE SUR on SUR.U_ID = U.ID
+    left join SYS_ROLE SR on SR.ID = SUR.R_ID
     <where>
       <if test="findContent != null and findContent !='' " >
         and (
@@ -59,13 +59,14 @@
         )
       </if>
     </where>
-    group by u.id
+    group by U.ID,U.NICKNAME,U.EMAIL,U.CREATE_TIME,U.LAST_LOGIN_TIME,U.STATUS
   </select>
+
   <select id="selectRoleByUserId" resultType="com.ic.permission.bo.URoleBo">
-    select SR.ID,SR.NAME,SR.TYPE,ifnull(SU.ID,0) marker,SU.ID userId from SYS_ROLE SR
-    left join SYS_USER_ROLE SUR on SUR.RID = UR.ID
-    left join (select ID from SYS_USER where ID =#{id,jdbcType=BIGINT}) SU on SU.ID = SUR.UID
-    group by SR.ID
+      select UR.ID,UR.NAME,UR.TYPE,"MAX"(NVL(UU.ID,0)) marker from SYS_ROLE UR
+      left join SYS_USER_ROLE UUR on UUR.U_ID = UR.ID
+      left join (select ID from SYS_USER where ID =#{id,jdbcType=BIGINT}) UU on UU.ID = UUR.U_ID
+      group by UR.ID,UR.NAME,UR.TYPE
   </select>
 
   <!-- 登录 -->

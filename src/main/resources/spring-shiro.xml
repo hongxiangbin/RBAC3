@@ -93,7 +93,7 @@
 	</bean>
 	<!-- session 校验单个用户是否多次登录 -->
 	<bean id="kickoutSessionFilter"   class="com.ic.core.shiro.filter.KickoutSessionFilter">
-	    <property name="kickoutUrl" value="/u/login.shtml?kickout"/>  
+	    <property name="kickoutUrl" value="/u/login.shtml?kickout"/>
 	</bean>  
 	<!-- 静态注入 jedisShiroSessionRepository-->
 	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">

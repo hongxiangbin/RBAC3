@@ -39,6 +39,14 @@ public class UserLoginController extends BaseController {
 
 	@Resource
 	SysUserService userService;
+
+	/**
+	 * 原主页
+	 */
+	/*@RequestMapping(value = "index1",method = RequestMethod.GET)
+	public ModelAndView old_index(){
+		return new ModelAndView("user/index1");
+	}*/
 	
 	/**
 	 * 登录跳转
@@ -161,4 +169,6 @@ public class UserLoginController extends BaseController {
 		}
 		return resultMap;
 	}
+
+
 }

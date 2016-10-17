@@ -53,14 +53,6 @@
         <include refid="where_all"/>
     </select>
 
-    <!-- 选择角色给用户 ，checkbox 列表-->
-    <select id="selectRoleByUserId" resultType="com.ic.permission.bo.URoleBo">
-    select UR.ID,UR.NAME,UR.TYPE,ifnull(UU.ID,0)marker from SYS_ROLE UR
-    left join SYS_USER_ROLE UUR on UUR.U_ID = UR.ID
-    left join (select ID from SYS_USER where ID =#{id,jdbcType=BIGINT}) UU on UU.ID = UUR.U_ID
-    group by UR.ID
-  </select>
-
     <!-- 权限分配的分页查询 -->
     <select id="findRoleAndPermission" resultType="com.ic.permission.bo.RolePermissionAllocationBo">
         select UR.ID,UR.TYPE,UR.NAME,wm_concat(UP.NAME) permissionNames,wm_concat(UP.ID)permissionIds from
@@ -96,7 +88,7 @@
     left join SYS_ROLE UR on UUR.R_ID = UR.ID
     left join SYS_ROLE_RESOURCE URP on URP.ROLE_ID = UR.ID
     left join SYS_RESOURCE UP on UP.ID = URP.RES_ID
-  </select>
+    </select>
     <!-- Mybatis 一对多 Demo  end -->
 
     <!--一下为自动生成-->
